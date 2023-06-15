@@ -1,9 +1,5 @@
 class Functions {
 
-    fun <T> get(t: T): T {
-        return t
-    }
-
     fun <T> addToList(list: MutableList<T>, element: T): Int {
         list += element
         return list.lastIndex
@@ -54,19 +50,23 @@ class NotesServices {
     class CommentNotFoundException(message: String) : RuntimeException(message)
 
 
-                                         //               *** get generic  ***
-    fun getNotes() = Functions().get(notes)
-    fun getAllComments() = Functions().get(comments)
+    //                                            *** get  ***
+
+    fun getNotes(): MutableList<Notes> {
+        return notes
+    }
+
+    fun getAllComments(): MutableList<Comments> {
+        return comments
+    }
 
 
-                                                                //****
+    //****
 
-    fun getNoteById(noteId: Int): List<Notes> {
-       val result = notes.filter { it.noteId == noteId}
-       if (result.isEmpty()) {
-           throw NoteNotFoundException("Note not found")
-       }
-       return result
+    fun getNoteById(noteId: Int): Notes {
+        val result = notes.find { it.noteId == noteId }
+        result ?: throw NoteNotFoundException("Note not found")
+        return result
     }
 
     fun getCommentsToNote(noteId: Int): List<Comments> {
@@ -78,7 +78,7 @@ class NotesServices {
     }
 
 
-                                               //           ***  add generic  ***
+    //           ***  add generic  ***
 
     fun addNote(title: String, text: String): Int {
         return Functions().addToList(notes, Notes(noteId = noteId++, title = title, text = text))
